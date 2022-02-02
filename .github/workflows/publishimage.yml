@@ -19,5 +19,7 @@ jobs:
       - name: Version Check
         id: versioncheck
         run: |
-          curl -LJO https://raw.githubusercontent.com/Ylianst/MeshCentral/master/package.json
-          cat package.json
+          echo "::set-output name=VERSION::$(npm info meshcentral version)"
+      
+      - name: Output Version
+        run: echo "The selected version is ${{ steps.versioncheck.outputs.VERSION }}"
