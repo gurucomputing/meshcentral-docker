@@ -15,7 +15,7 @@ echo "---- Setting File Permissions based on user ----"
 sudo /bin/sh /staging/scripts/3-initialise-elevated.sh $(id -u) $(id -g)
 
 # generate a config.json if it doesn't exist
-if [ ! -f /meshcentral/container-data/config.json ];
+if [ ! -f /meshcentral/meshcentral-data/config.json ];
 then
     echo "---- No config.json file detected. Creating based on Environment Variables ----"
     /bin/sh /staging/scripts/4-generate-config.sh
