@@ -21,7 +21,7 @@ jobs:
           echo "::set-output name=STABLE_VERSION::$(npm dist-tags meshcentral | grep stable | awk -F '[ ]' '{print $2}')"
           # check if both versions are equal
           isStable() {
-          [ "${{ steps.versioncheck.outputs.VERSION }}" = "${{ steps.versioncheck.outputs.STABLE_VERSION }}"
+          [ "${{ steps.versioncheck.outputs.VERSION }}" = "${{ steps.versioncheck.outputs.STABLE_VERSION }}" ]
           }
           isStable
           echo "::set-output name=IS_STABLE::$?"
