@@ -17,7 +17,15 @@ jobs:
       - name: Variable Gathering
         id: gathervars
         run: |
-          echo 'Hi'
+          VERSION=$(npm info meshcentral version)
+          STABLE_VERSION=$(npm dist-tags meshcentral | grep stable | awk -F '[ ]' '{print $2}')
+          echo "::set-output name=VERSION::$VERSION"
+          echo "::set-output name=STABLE_VERSION::$STABLE_VERSION"
+          # check if version has already been published
+          docker manifest inspect ghcr.io/gurucomputing/meshcentral-docker:$VERSION > /dev/null
+          echo "::set-output name=NOT_PREVIOUSLY_PUBLISHED::$?"
+          # get a current BUILD_DATE
+          echo "::set-output name=BUILD_DATE::$(date +%Y%m%d-%H%M%S)"
 
       - name: Output Version
         run: |
