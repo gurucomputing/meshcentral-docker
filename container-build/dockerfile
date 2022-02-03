@@ -22,7 +22,8 @@ ENV AGENT_PORT=
 ENV CERT=
 
 
-# We are exposing four ports: 80/443 for the web management interface
+# We are exposing two ports: 80/443 for the web management interface. Optionally we can also (in config.json)
+# expose the intel AMT port (4433) and an agent port (defaults to 8800, can be whatever)
 EXPOSE 80 443
 
 # Set the staging environment
