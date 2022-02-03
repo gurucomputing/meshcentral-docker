@@ -1,6 +1,8 @@
 # Meshcentral Docker
 Repository for building meshcentral images in docker
 
+![readme-gif](assets/readme-gif.gif)
+
 ## Meshcentral Summary
 Meshcentral is a remote management and monitoring (RMM) system designed to run in a web browser. Meshcentral supports Linux, Windows, MacOS, and (to a certain extent) Android.
 
@@ -22,10 +24,16 @@ For advanced configurations, you can modify the `config.json` that will be gener
 * Non-Root container by default
 * Volumes will automatically adjust file permissions to the docker user
 
+## Docker Tags
+
+If you want to stay on the bleeding edge, the `latest` tag will follow all version updates from the upstream Meshcentral (checked daily). Meshcentral is highly maintained and sees nearly daily updates.
+
+If you are looking for a production or stable experience, the `stable` tag will follow any versions marked *stable* within the node repository for Meshcentral.
+
 ## Container Defaults
 * Ports are `80`/`443`
 * Certificates are self signed and generated on first boot
-    * Signed certificates can be provided by a reverse proxy (example given in documentation) or by editing 
+    * Signed certificates can be provided by a reverse proxy (example given in documentation) or by editing `config.json`
 * Database is an embedded database by default (NeDB)
     * Database can be changed to mongodb using environment variables or editing `config.json` in `meshcentral-data`. Recommended for production.
 * Container will run as the `node` user, with a UID of `1000` and GID of `1000`
@@ -76,3 +84,15 @@ services:
 ### Example: Reverse Proxy with Caddy
 
 ### Example: 
+
+## Additional Notes
+
+### SE-Linux Based Environments
+If you are using an SE-Linux based environment (such as Fedora, CentOS, or equivalent), docker will deny file permissions in bind mounts. You must relabel or explicitly tell docker to ignore file labelling. You can ignore file labelling by adding the following to your service:
+
+```yaml
+services:
+  meshcentral:
+    security_opt:
+      - label:disable
+```
