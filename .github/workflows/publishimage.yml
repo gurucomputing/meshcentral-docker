@@ -17,8 +17,16 @@ jobs:
       - name: Version Check
         id: versioncheck
         run: |
-          echo "::set-output name=VERSION::$(npm info meshcentral version)"
-          echo "::set-output name=STABLE_VERSION::$(npm dist-tags meshcentral | grep stable | awk -F '[ ]' '{print $2}')"
+          
+          VERSION=$(npm info meshcentral version)
+          STABLE_VERSION=$(npm dist-tags meshcentral | grep stable | awk -F '[ ]' '{print $2}')
+          
+          echo "::set-output name=VERSION::$VERSION"
+          echo "::set-output name=STABLE_VERSION::$STABLE_VERSION"
+          
+          #check if version has already been published
+          docker manifest inspect ghcr.io/gurucomputing/meshcentral-docker:$VERSION > /dev/null
+          echo "::set-output name=NOT_PREVIOUSLY_PUBLISHED::$?"
 
       - name: Output Version
         run: |
@@ -41,8 +49,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
         
-      - name: Build and push Docker Image
+      - name: Build and push Stable Docker Image
         uses: docker/build-push-action@v2
+        if: |
+          ${{ steps.versioncheck.outputs.VERSION == steps.versioncheck.outputs.STABLE_VERSION }} &&
+          steps.versioncheck.outputs.NOT_PREVIOUSLY_PUBLISHED
+        with:
+          context: ./container-build
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:stable
+            ghcr.io/${{ github.repository }}:${{ steps.versioncheck.outputs.VERSION }}
+          push: true
+          
+      - name: Build and push Latest Docker Image
+        uses: docker/build-push-action@v2
+        if: |
+          ${{ steps.versioncheck.outputs.VERSION != steps.versioncheck.outputs.STABLE_VERSION }} &&
+          steps.versioncheck.outputs.NOT_PREVIOUSLY_PUBLISHED
         with:
           context: ./container-build
           tags: |
