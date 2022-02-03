@@ -19,6 +19,7 @@ ENV MONGODB_URL=
 ENV MONGODB_NAME=
 ENV DB_ENCRYPT_KEY=
 ENV AGENT_PORT=
+ENV CERT=
 
 
 # We are exposing four ports: 80/443 for the web management interface

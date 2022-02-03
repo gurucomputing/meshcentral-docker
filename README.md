@@ -13,7 +13,7 @@ For advanced configurations, you can modify the `config.json` that will be gener
 
 * [Basic config.json configuration](https://github.com/Ylianst/MeshCentral/blob/master/sample-config.json)
 * [Advanced config.json configuration](https://github.com/Ylianst/MeshCentral/blob/master/sample-config-advanced.json)
-* [Full schema documentation for config.json](https://github.com/Ylianst/MeshCentral/blob/master/meshcentral-config-schema.jsonp-0[])
+* [Full schema documentation for config.json](https://github.com/Ylianst/MeshCentral/blob/master/meshcentral-config-schema.json)
 * [Meshcentral User Guide](https://info.meshcentral.com/downloads/MeshCentral2/MeshCentral2UserGuide.pdf)
 * [Meshcentral Installer Guide](https://info.meshcentral.com/downloads/MeshCentral2/MeshCentral2InstallGuide.pdf)
 
@@ -50,6 +50,7 @@ Environment variables will **only** apply on first run, when no `config.json` fi
 | MONGODB_NAME | database name | `meshcentral` |
 | DB_ENCRYPT_KEY | secret/key to encrypt the mongodb database | `${DB_ENCRYPT_KEY}` |
 | AGENT_PORT  | optional port for agents to connect on | `8800` |
+| CERT | dns name for your server, needed for trusted TLS connections | `mesh.mydomain.com` |
 
 ## Volumes
 There are three volumes in question for persistent data:
@@ -62,14 +63,14 @@ There are three volumes in question for persistent data:
 ## Examples
 Example docker-compose files can be found in the repository. For your convenience, the three most common examples are here:
 
-### Example: Simple Configuration
+### Example 1: Simple Configuration
 Most basic meshcentral configuration
 ```yaml
 version: '2'
 services:
   meshcentral:
     container_name: meshcentral
-    image: ghcr.io/gurucomputing/meshcentral:latest
+    image: ghcr.io/gurucomputing/meshcentral-docker:latest
     restart: "always"
     volumes:
       - ./container-data/meshcentral-data:/meshcentral/meshcentral-data
@@ -81,9 +82,126 @@ services:
       - 443:443
 ```
 
-### Example: Reverse Proxy with Caddy
+### Example 2: using MongoDB for Backend
+initialize a meshcentral container with mongodb
+```yaml
+version: '2'
+# This is example 2 from the documentation
+services:
+  meshcentral:
+    container_name: meshcentral
+    image: ghcr.io/gurucomputing/meshcentral-docker:latest
+    restart: "always"
+    volumes:
+      - ./container-data/meshcentral-data:/meshcentral/meshcentral-data
+      - ./container-data/meshcentral-files:/meshcentral/meshcentral-files
+      - ./container-data/meshcentral-backup:/meshcentral/meshcentral-backup
+      - /etc/localtime:/etc/localtime:ro
+    ENVIRONMENT:
+      - MONGODB_URL=mongodb://meshcentral-db:27017
+      - MONGODB_NAME=meshcentral
+      - DB_ENCRYPT_KEY=${DB_ENCRYPT_KEY}
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - meshcentral-nw
+  meshcentral-db:
+    container_name: meshcentral-db
+    image: mongo:latest
+    restart: "always"
+    volumes:
+      - ./container-data/db:/data/db
+      - /etc/localtime:/etc/localtime:ro
+    # ports:
+    #   - 27017:27017
+    networks:
+      - meshcentral-nw
 
-### Example: 
+networks:
+  meshcentral-nw:
+```
+
+Also create a `.env` file for your secrets:
+
+```
+DB_ENCRYPT_KEY=mysecretpassword
+```
+
+### Example 3: Advanced Config with MongoDB, Agent Port, and Caddy Reverse Proxy
+A full solution including an separate port for agent connections and caddy for reverse proxying and let's encrypt. This assumes port 80, 443, and 8800 are all forwarded from the docker host to the web (otherwise let's encrypt will fail)
+
+```yaml
+version: '2'
+# This is example 3 from the documentation
+services:
+  meshcentral:
+    container_name: meshcentral
+    image: ghcr.io/gurucomputing/meshcentral-docker:latest
+    restart: "always"
+    volumes:
+      - ./container-data/meshcentral-data:/meshcentral/meshcentral-data
+      - ./container-data/meshcentral-files:/meshcentral/meshcentral-files
+      - ./container-data/meshcentral-backup:/meshcentral/meshcentral-backup
+      - /etc/localtime:/etc/localtime:ro
+    ENVIRONMENT:
+      - MONGODB_URL=mongodb://meshcentral-db:27017
+      - MONGODB_NAME=meshcentral
+      - DB_ENCRYPT_KEY=${DB_ENCRYPT_KEY}
+      - AGENT_PORT=8800
+      - CERT=mesh.mydomain.com
+    ports:
+      - 8800:8800
+      # - 80:80
+      # - 443:443
+    networks:
+      - meshcentral-nw
+      - reverseproxy-nw
+  meshcentral-db:
+    container_name: meshcentral-db
+    image: mongo:latest
+    restart: "always"
+    volumes:
+      - ./container-data/db:/data/db
+      - /etc/localtime:/etc/localtime:ro
+    # ports:
+    #   - 27017:27017
+    networks:
+      - meshcentral-nw
+  meshcentral-proxy:
+    container_name: meshcentral-proxy
+    image: caddy:latest
+    restart: "always"
+    volumes:
+      - caddy/Caddyfile:/usr/share/caddy/Caddyfile
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - reverseproxy-nw
+
+networks:
+  meshcentral-nw:
+  reverseproxy-nw:
+```
+
+Include your `.env` file of course:
+
+```
+DB_ENCRYPT_KEY=mysecretpassword
+```
+
+And include your `Caddyfile` under `caddy/Caddyfile`
+
+```
+reverse_proxy https://mesh.mydomain.com {
+	reverse_proxy https://meshcentral:443 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+```
 
 ## Additional Notes
 

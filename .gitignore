@@ -1,1 +1,2 @@
-container-data/mesh*
+container-data/
+.env
