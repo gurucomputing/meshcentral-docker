@@ -14,7 +14,7 @@ export HOME=/meshcentral/home
 if [ $(id -u) -eq 1000 ]
 then
     echo "---- Setting File Permissions based on user ----"
-    sudo chown -R 1000:1000 /meshcentral
+    sudo /bin/chown -R 1000:1000 /meshcentral
 fi
 
 # generate a config.json if it doesn't exist
