@@ -25,8 +25,8 @@ jobs:
           echo "::set-output name=STABLE_VERSION::$STABLE_VERSION"
           
           #check if version has already been published
-          docker manifest inspect ghcr.io/gurucomputing/meshcentral-docker:$VERSION > /dev/null
-          echo "::set-output name=NOT_PREVIOUSLY_PUBLISHED::$?"
+          # docker manifest inspect ghcr.io/gurucomputing/meshcentral-docker:$VERSION > /dev/null
+          # echo "::set-output name=NOT_PREVIOUSLY_PUBLISHED::$?"
 
           #get a current timestamp
           echo "::set-output name=TIMESTAMP::$(date --utc +%Y%m%d_%H%M%SZ)"
