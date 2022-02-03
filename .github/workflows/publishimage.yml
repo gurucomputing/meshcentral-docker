@@ -41,8 +41,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
         
-#       - name: Build and push Docker Image
-#         uses: docker/build-push-action@v2
-#         with:
-#           context: ./container-build
-#           push: true
+      - name: Build and push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./container-build
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ steps.versioncheck.outputs.VERSION }}
+          push: true
