@@ -33,7 +33,7 @@ WORKDIR /staging
 COPY scripts/* ./scripts/
 
 # Set permissions for all scripts. We do not want normal users to have write
-# access to the scripts (especially the elevated one)
+# access to the scripts
 RUN chown -R 0:0 scripts
 RUN chmod -R 755 scripts
 

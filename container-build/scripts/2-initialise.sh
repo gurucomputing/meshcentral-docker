@@ -11,14 +11,17 @@
 export HOME=/meshcentral/home
 
 # set file permissions. Calls the elevation script to modify permissions
-echo "---- Setting File Permissions based on user ----"
-sudo /bin/sh /staging/scripts/3-initialise-elevated.sh $(id -u) $(id -g)
+if [ $(id -u) -eq 1000 ]
+then
+    echo "---- Setting File Permissions based on user ----"
+    sudo chown -R 1000:1000 /meshcentral
+fi
 
 # generate a config.json if it doesn't exist
 if [ ! -f /meshcentral/meshcentral-data/config.json ];
 then
     echo "---- No config.json file detected. Creating based on Environment Variables ----"
-    /bin/sh /staging/scripts/4-generate-config.sh
+    /bin/sh /staging/scripts/3-generate-config.sh
 fi
 
 # start meshcentral

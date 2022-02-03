@@ -12,8 +12,8 @@ apk add --no-cache sudo libcap
 # jq               json parser, can be used to filter json files
 apk add --no-cache mongodb-tools jo jq
 
-# Add the ability to run the initialize-elevated script as root
-echo "ALL ALL=NOPASSWD: /bin/sh /staging/scripts/3-initialise-elevated.sh*" >> /etc/sudoers
+# Add the ability to set file permissions to the non-privileged user
+echo "ALL ALL=NOPASSWD: chown -R 1000:1000 /meshcentral" >> /etc/sudoers
 
 # Set the workdir for meshcentral
 mkdir -p /meshcentral/home
