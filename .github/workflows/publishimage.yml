@@ -45,41 +45,41 @@ jobs:
             echo "This image has already been published to the registry. Not proceeding"
           fi
 
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        if: ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
+      # - name: Checkout Repository
+      #   uses: actions/checkout@v2
+      #   if: ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
         
-      - name: Log in to the Container registry
-        uses: docker/login-action@v1
-        if: ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Log in to the Container registry
+      #   uses: docker/login-action@v1
+      #   if: ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
         
-      - name: Build and push Stable Docker Image
-        uses: docker/build-push-action@v2
-        if: ${{ steps.gathervars.outputs.VERSION == steps.gathervars.outputs.STABLE_VERSION && steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
-        with:
-          build-args: |
-            BUILD_DATE=${{ steps.gathervars.outputs.BUILD_DATE }}
-            VERSION=${{ steps.gathervars.outputs.VERSION }}
-          context: ./container-build
-          tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:stable
-            ghcr.io/${{ github.repository }}:${{ steps.gathervars.outputs.VERSION }}
-          push: true
+      # - name: Build and push Stable Docker Image
+      #   uses: docker/build-push-action@v2
+      #   if: ${{ steps.gathervars.outputs.VERSION == steps.gathervars.outputs.STABLE_VERSION && steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
+      #   with:
+      #     build-args: |
+      #       BUILD_DATE=${{ steps.gathervars.outputs.BUILD_DATE }}
+      #       VERSION=${{ steps.gathervars.outputs.VERSION }}
+      #     context: ./container-build
+      #     tags: |
+      #       ghcr.io/${{ github.repository }}:latest
+      #       ghcr.io/${{ github.repository }}:stable
+      #       ghcr.io/${{ github.repository }}:${{ steps.gathervars.outputs.VERSION }}
+      #     push: true
           
-      - name: Build and push Latest Docker Image
-        uses: docker/build-push-action@v2
-        if: ${{ steps.gathervars.outputs.VERSION != steps.gathervars.outputs.STABLE_VERSION && steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
-        with:
-          build-args: |
-            # BUILD_DATE=${{ steps.gathervars.outputs.BUILD_DATE }}
-            VERSION=${{ steps.gathervars.outputs.VERSION }}
-          context: ./container-build
-          tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ steps.gathervars.outputs.VERSION }}
-          push: true
+      # - name: Build and push Latest Docker Image
+      #   uses: docker/build-push-action@v2
+      #   if: ${{ steps.gathervars.outputs.VERSION != steps.gathervars.outputs.STABLE_VERSION && steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
+      #   with:
+      #     build-args: |
+      #       # BUILD_DATE=${{ steps.gathervars.outputs.BUILD_DATE }}
+      #       VERSION=${{ steps.gathervars.outputs.VERSION }}
+      #     context: ./container-build
+      #     tags: |
+      #       ghcr.io/${{ github.repository }}:latest
+      #       ghcr.io/${{ github.repository }}:${{ steps.gathervars.outputs.VERSION }}
+      #     push: true
