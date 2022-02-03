@@ -20,7 +20,8 @@ mkdir -p /meshcentral/home
 cd /meshcentral
 
 # Install meshcentral
-npm install meshcentral
+echo ${VERSION}
+npm install meshcentral@${VERSION}
 
 # Allow node to bind to lower ports, even if not running as root
 setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/node

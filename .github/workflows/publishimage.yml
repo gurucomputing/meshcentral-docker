@@ -5,6 +5,10 @@ on:
     - cron: '0 12 * * *'
   workflow_dispatch:
 
+env:
+  VERSION_OVERRIDE: 0
+  VERSION_OVERRIDE_NUMBER: "0.9.77"
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   publish:
@@ -20,8 +24,15 @@ jobs:
           NOT_PREVIOUSLY_PUBLISHED=0
           VERSION=$(npm info meshcentral version)
           STABLE_VERSION=$(npm dist-tags meshcentral | grep stable | awk -F '[ ]' '{print $2}')
+
+          if [ ${{ env.VERSION_OVERRIDE }} -eq 1 ]
+          then
+            echo "Version override detected. Setting version to ${{ env.VERSION_OVERRIDE_NUMBER }}"
+            VERSION=${{ env.VERSION_OVERRIDE_NUMBER }}
+          fi
           echo "::set-output name=VERSION::$VERSION"
           echo "::set-output name=STABLE_VERSION::$STABLE_VERSION"
+
           echo $VERSION
           echo $STABLE_VERSION
           # check if version has already been published
@@ -47,11 +58,11 @@ jobs:
 
       - name: Checkout Repository
         uses: actions/checkout@v2
-        if: ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
+        if: ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED != 0 }}
         
       - name: Log in to the Container registry
         uses: docker/login-action@v1
-        if: ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
+        if: ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED != 0 }}
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
