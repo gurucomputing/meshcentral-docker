@@ -1,5 +1,8 @@
 # Meshcentral Docker
 Repository for building meshcentral images in docker
+```
+docker run -p 80:80 -p 443:443 ghcr.io/gurucomputing/meshcentral-docker
+```
 
 ![readme-gif](assets/readme-gif.gif)
 
