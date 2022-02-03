@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "The selected version is ${{ steps.versioncheck.outputs.VERSION }}"
           echo "The latest stable version is ${{ steps.versioncheck.outputs.STABLE_VERSION }}"
-          if [ "${{ steps.versioncheck.outputs.VERSION }}" = "${{ steps.versioncheck.outputs.STABLE_VERSION }} ]
+          if [ "${{ steps.versioncheck.outputs.VERSION }}" = "${{ steps.versioncheck.outputs.STABLE_VERSION }}" ]
           then
             echo "the current version does not match the stable version"
           fi
