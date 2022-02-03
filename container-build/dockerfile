@@ -4,7 +4,6 @@ FROM node:alpine
 # Build Arguments
 ARG BUILD_DATE
 ARG VERSION
-ARG MESHCENTRAL_RELEASE
 
 # Volumes
 ### This is the primary volume for configuration files
