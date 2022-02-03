@@ -25,7 +25,7 @@ jobs:
           echo $VERSION
           echo $STABLE_VERSION
           # check if version has already been published
-          docker manifest inspect ghcr.io/gurucomputing/meshcentral-docker:$VERSION || NOT_PREVIOUSLY_PUBLISHED=1
+          $(docker manifest inspect ghcr.io/gurucomputing/meshcentral-docker:$VERSION > /dev/null) || NOT_PREVIOUSLY_PUBLISHED=1
           echo "::set-output name=NOT_PREVIOUSLY_PUBLISHED::$NOT_PREVIOUSLY_PUBLISHED"
           # get a current BUILD_DATE
           echo "::set-output name=BUILD_DATE::$(date +%Y%m%d-%H%M%S)"
@@ -41,7 +41,7 @@ jobs:
             echo "the current version does not match the stable version"
           fi
           echo ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
-          if ! [ ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }} ]
+          if [ ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }} -eq 0 ]
           then
             echo "This image has already been published to the registry. Not proceeding"
           fi
