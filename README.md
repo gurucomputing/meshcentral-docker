@@ -147,7 +147,7 @@ services:
       - ./container-data/meshcentral-files:/meshcentral/meshcentral-files
       - ./container-data/meshcentral-backup:/meshcentral/meshcentral-backup
       - /etc/localtime:/etc/localtime:ro
-    ENVIRONMENT:
+    environment:
       - MONGODB_URL=mongodb://meshcentral-db:27017
       - MONGODB_NAME=meshcentral
       - DB_ENCRYPT_KEY=${DB_ENCRYPT_KEY}
