@@ -26,11 +26,20 @@ jobs:
           echo "The latest stable version is ${{ steps.versioncheck.outputs.STABLE_VERSION }}"
           if [ "${{ steps.versioncheck.outputs.VERSION }}" = "${{ steps.versioncheck.outputs.STABLE_VERSION }}" ]
           then
+            echo "the current version matches the stable version"
+          else
             echo "the current version does not match the stable version"
           fi
 
-#       - name: Checkout Repository
-#         uses: actions/checkout@V2
+      - name: Checkout Repository
+        uses: actions/checkout@V2
+        
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
         
 #       - name: Build and push Docker Image
 #         uses: docker/build-push-action@v2
