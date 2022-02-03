@@ -40,6 +40,7 @@ jobs:
           else
             echo "the current version does not match the stable version"
           fi
+          echo ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
           if [ ! ${{ steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }} ]
           then
             echo "This image has already been published to the registry. Not proceeding"
