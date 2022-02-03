@@ -19,18 +19,12 @@ jobs:
         run: |
           echo "::set-output name=VERSION::$(npm info meshcentral version)"
           echo "::set-output name=STABLE_VERSION::$(npm dist-tags meshcentral | grep stable | awk -F '[ ]' '{print $2}')"
-          # check if both versions are equal
-          isStable() {
-          [ "${{ steps.versioncheck.outputs.VERSION }}" = "${{ steps.versioncheck.outputs.STABLE_VERSION }}" ]
-          }
-          isStable
-          echo "::set-output name=IS_STABLE::$?"
 
       - name: Output Version
         run: |
           echo "The selected version is ${{ steps.versioncheck.outputs.VERSION }}"
           echo "The latest stable version is ${{ steps.versioncheck.outputs.STABLE_VERSION }}"
-          if ! ${{ steps.versioncheck.outputs.IS_STABLE }}; then
+          if ! "${{ steps.versioncheck.outputs.VERSION }}" = "${{ steps.versioncheck.outputs.STABLE_VERSION }}"; then
             echo "the current version does not match the stable version"
           fi
 
