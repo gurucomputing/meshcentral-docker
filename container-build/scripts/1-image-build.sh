@@ -16,7 +16,7 @@ apk add --no-cache mongodb-tools jo jq
 echo "ALL ALL=NOPASSWD: /bin/sh /staging/scripts/3-initialise-elevated.sh*" >> /etc/sudoers
 
 # Set the workdir for meshcentral
-mkdir /meshcentral/home
+mkdir -p /meshcentral/home
 cd /meshcentral
 
 # Install meshcentral
