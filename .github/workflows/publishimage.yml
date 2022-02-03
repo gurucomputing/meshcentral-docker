@@ -73,7 +73,7 @@ jobs:
           
       - name: Build and push Latest Docker Image
         uses: docker/build-push-action@v2
-        if: ${{ steps.gathervars.outputs.VERSION == steps.gathervars.outputs.STABLE_VERSION && steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
+        if: ${{ steps.gathervars.outputs.VERSION != steps.gathervars.outputs.STABLE_VERSION && steps.gathervars.outputs.NOT_PREVIOUSLY_PUBLISHED }}
         with:
           build_args: |
             # BUILD_DATE=${{ steps.gathervars.outputs.BUILD_DATE }}
