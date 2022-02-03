@@ -1,8 +1,7 @@
 version: "2"
 services:
   meshcentral:
-    build: ./container-build
-    image: meshcentral:latest
+    image: ghcr.io/gurucomputing/meshcentral-docker:stable
     security_opt:
       - label:disable
     container_name: meshcentral
