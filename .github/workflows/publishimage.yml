@@ -23,12 +23,16 @@ jobs:
           isStable() {
           [ "${{ steps.versioncheck.outputs.VERSION }}" = "${{ steps.versioncheck.outputs.STABLE_VERSION }}"
           }
-          echo $?
+          isStable
+          echo "::set-output name=IS_STABLE::$?"
 
       - name: Output Version
         run: |
           echo "The selected version is ${{ steps.versioncheck.outputs.VERSION }}"
           echo "The latest stable version is ${{ steps.versioncheck.outputs.STABLE_VERSION }}"
+          if ! ${{ steps.versioncheck.outputs.IS_STABLE }}; then
+            echo "the current version does not match the stable version"
+          fi
 
 #       - name: Checkout Repository
 #         uses: actions/checkout@V2
