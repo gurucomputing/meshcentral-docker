@@ -51,9 +51,7 @@ jobs:
         
       - name: Build and push Stable Docker Image
         uses: docker/build-push-action@v2
-        if: |
-          ${{ steps.versioncheck.outputs.VERSION == steps.versioncheck.outputs.STABLE_VERSION }} &&
-          steps.versioncheck.outputs.NOT_PREVIOUSLY_PUBLISHED
+        if: ${{ steps.versioncheck.outputs.VERSION == steps.versioncheck.outputs.STABLE_VERSION && steps.versioncheck.outputs.NOT_PREVIOUSLY_PUBLISHED }}
         with:
           context: ./container-build
           tags: |
@@ -64,9 +62,7 @@ jobs:
           
       - name: Build and push Latest Docker Image
         uses: docker/build-push-action@v2
-        if: |
-          ${{ steps.versioncheck.outputs.VERSION != steps.versioncheck.outputs.STABLE_VERSION }} &&
-          steps.versioncheck.outputs.NOT_PREVIOUSLY_PUBLISHED
+        if: ${{ steps.versioncheck.outputs.VERSION == steps.versioncheck.outputs.STABLE_VERSION && steps.versioncheck.outputs.NOT_PREVIOUSLY_PUBLISHED }}
         with:
           context: ./container-build
           tags: |
