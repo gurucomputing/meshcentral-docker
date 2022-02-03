@@ -1,0 +1,35 @@
+version: '2'
+# This is example 2 from the documentation
+services:
+  meshcentral:
+    container_name: meshcentral
+    image: ghcr.io/gurucomputing/meshcentral-docker:latest
+    restart: "always"
+    volumes:
+      - ./container-data/meshcentral-data:/meshcentral/meshcentral-data
+      - ./container-data/meshcentral-files:/meshcentral/meshcentral-files
+      - ./container-data/meshcentral-backup:/meshcentral/meshcentral-backup
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - MONGODB_URL=mongodb://meshcentral-db:27017
+      - MONGODB_NAME=meshcentral
+      - DB_ENCRYPT_KEY=${DB_ENCRYPT_KEY}
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - meshcentral-nw
+  meshcentral-db:
+    container_name: meshcentral-db
+    image: mongo:latest
+    restart: "always"
+    volumes:
+      - ./container-data/db:/data/db
+      - /etc/localtime:/etc/localtime:ro
+    # ports:
+    #   - 27017:27017
+    networks:
+      - meshcentral-nw
+
+networks:
+  meshcentral-nw:

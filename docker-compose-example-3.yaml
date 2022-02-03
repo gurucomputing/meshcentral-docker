@@ -1,0 +1,51 @@
+version: '2'
+# This is example 3 from the documentation
+services:
+  meshcentral:
+    container_name: meshcentral
+    image: ghcr.io/gurucomputing/meshcentral-docker:latest
+    restart: "always"
+    volumes:
+      - ./container-data/meshcentral-data:/meshcentral/meshcentral-data
+      - ./container-data/meshcentral-files:/meshcentral/meshcentral-files
+      - ./container-data/meshcentral-backup:/meshcentral/meshcentral-backup
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - MONGODB_URL=mongodb://meshcentral-db:27017
+      - MONGODB_NAME=meshcentral
+      - DB_ENCRYPT_KEY=${DB_ENCRYPT_KEY}
+      - AGENT_PORT=8800
+      - CERT=mesh.mydomain.com
+    ports:
+      - 8800:8800
+      # - 80:80
+      # - 443:443
+    networks:
+      - meshcentral-nw
+      - reverseproxy-nw
+  meshcentral-db:
+    container_name: meshcentral-db
+    image: mongo:latest
+    restart: "always"
+    volumes:
+      - ./container-data/db:/data/db
+      - /etc/localtime:/etc/localtime:ro
+    # ports:
+    #   - 27017:27017
+    networks:
+      - meshcentral-nw
+  meshcentral-proxy:
+    container_name: meshcentral-proxy
+    image: caddy:latest
+    restart: "always"
+    volumes:
+      - caddy/Caddyfile:/usr/share/caddy/Caddyfile
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - reverseproxy-nw
+
+networks:
+  meshcentral-nw:
+  reverseproxy-nw:
