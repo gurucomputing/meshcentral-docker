@@ -38,12 +38,18 @@ jobs:
           else
             echo "the current version does not match the stable version"
           fi
+          if [ ! ${{ steps.versioncheck.outputs.NOT_PREVIOUSLY_PUBLISHED }} ]
+          then
+            echo "This image has already been published to the registry. Not proceeding"
+          fi
 
       - name: Checkout Repository
         uses: actions/checkout@v2
+        if: ${{ steps.versioncheck.outputs.NOT_PREVIOUSLY_PUBLISHED }}
         
       - name: Log in to the Container registry
         uses: docker/login-action@v1
+        if: ${{ steps.versioncheck.outputs.NOT_PREVIOUSLY_PUBLISHED }}
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
