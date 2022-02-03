@@ -40,7 +40,6 @@ If you are looking for a production or stable experience, the `stable` tag will 
 * Database is an embedded database by default (NeDB)
     * Database can be changed to mongodb using environment variables or editing `config.json` in `meshcentral-data`. Recommended for production.
 * Container will run as the `node` user, with a UID of `1000` and GID of `1000`
-    * If you manually set the UID and GID, the container will automatically adjust file permissions on start
 
 ## Environment Variables
 The docker image can take multiple environment variables as arguments. All environment variables are optional.
