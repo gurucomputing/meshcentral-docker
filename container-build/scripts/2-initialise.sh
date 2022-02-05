@@ -16,7 +16,7 @@ if [ $(id -u) -ne $(stat -c %u /meshcentral/meshcentral-data) ]
 then
     if [ $(id -u) -eq 1000 ]
     then
-        echo "---- Detected File Permission Mismatch"
+        echo "---- Detected File Permission Mismatch ----"
         echo "---- Forcing File Permissions to the node user ----"
         sudo /bin/chown -R 1000:1000 /meshcentral
     else
