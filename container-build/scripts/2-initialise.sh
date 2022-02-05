@@ -10,7 +10,8 @@
 # set our home to a more generic home folder.
 export HOME=/meshcentral/home
 
-# set file permissions. Calls the elevation script to modify permissions
+# Checks if the /meshcentral/meshcentraldata is owned by the user running meshcentral
+# If not, the container will attempt to change the ownership permissions of the meshcentral folder 
 if [ $(id -u) -ne $(stat -c %u /meshcentral/meshcentral-data) ]
 then
     if [ $(id -u) -eq 1000 ]
