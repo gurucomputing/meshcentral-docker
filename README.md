@@ -27,6 +27,11 @@ For advanced configurations, you can modify the `config.json` that will be gener
 * Non-Root container by default
 * Volumes will automatically adjust file permissions to the docker user
 
+## Docker Container Changelog
+These mark changes to how the docker container operates. The version description defines where the change in question took place. Versions before the change will not be affected.
+| Version | Change
+| 0.9.79 | initialization script will now perform additional checks regarding file permissions before resorting to overwriting file ownership |
+
 ## Docker Tags
 
 If you want to stay on the bleeding edge, the `latest` tag will follow all version updates from the upstream Meshcentral (checked daily). Meshcentral is highly maintained and sees nearly daily updates.
@@ -175,7 +180,7 @@ services:
     image: caddy:latest
     restart: "always"
     volumes:
-      - caddy/Caddyfile:/usr/share/caddy/Caddyfile
+      - ./caddy/Caddyfile:/usr/share/caddy/Caddyfile
     ports:
       - 80:80
       - 443:443

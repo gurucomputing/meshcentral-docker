@@ -11,10 +11,17 @@
 export HOME=/meshcentral/home
 
 # set file permissions. Calls the elevation script to modify permissions
-if [ $(id -u) -eq 1000 ]
+if [ $(id -u) -ne $(stat -c %u /meshcentral/meshcentral-data) ]
 then
-    echo "---- Setting File Permissions based on user ----"
-    sudo /bin/chown -R 1000:1000 /meshcentral
+    if [ $(id -u) -eq 1000 ]
+    then
+        echo "---- Detected File Permission Mismatch"
+        echo "---- Forcing File Permissions to the node user ----"
+        sudo /bin/chown -R 1000:1000 /meshcentral
+    else
+        echo "---- You are not running as the node user AND your file permissions don't match your user ---\n"
+        echo "---- You may need to manually fix your file permissions ----"
+    fi
 fi
 
 # generate a config.json if it doesn't exist
