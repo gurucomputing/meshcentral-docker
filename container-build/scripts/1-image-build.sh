@@ -23,5 +23,8 @@ cd /meshcentral
 echo ${VERSION}
 npm install meshcentral@${VERSION}
 
+# set the meshcentral directory permissions to the node user
+/bin/chown -R 1000:1000 /meshcentral
+
 # Allow node to bind to lower ports, even if not running as root
 setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/node
