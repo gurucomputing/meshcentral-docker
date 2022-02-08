@@ -31,7 +31,7 @@ For advanced configurations, you can modify the `config.json` that will be gener
 These mark changes to how the docker container operates. The version description defines where the change in question took place. Versions before the change will not be affected.
 | Version | Change
 | --- | ----
-| 0.9.79 | initialization script will now perform additional checks regarding file permissions before resorting to overwriting file ownership |
+| 0.9.52 | initialization script will now perform additional checks regarding file permissions before resorting to overwriting file ownership |
 
 ## Docker Tags
 
