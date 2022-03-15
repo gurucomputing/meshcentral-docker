@@ -202,12 +202,12 @@ DB_ENCRYPT_KEY=mysecretpassword
 And include your `Caddyfile` under `caddy/Caddyfile`
 
 ```
-reverse_proxy https://mesh.mydomain.com {
-	reverse_proxy https://meshcentral:443 {
-        transport http {
-            tls_insecure_skip_verify
-        }
+https://mesh.mydomain.com {
+  reverse_proxy https://meshcentral:443 {
+    transport http {
+      tls_insecure_skip_verify
     }
+  }
 }
 ```
 
