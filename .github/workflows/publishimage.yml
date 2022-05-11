@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  VERSION_OVERRIDE: 0
-  VERSION_OVERRIDE_NUMBER: "0.9.52"
+  VERSION_OVERRIDE: 1
+  VERSION_OVERRIDE_NUMBER: "1.0.0"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
