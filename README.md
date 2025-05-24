@@ -1,3 +1,8 @@
+# This repository is now archived
+the original purpose of this repository was because meshcentral did not have an officially developed container image. The official image can now be found at https://github.com/Ylianst/MeshCentral/pkgs/container/meshcentral
+
+As a result, this repository is considered redundant.
+
 # Meshcentral Docker
 Repository for building meshcentral images in docker
 ```
